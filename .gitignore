@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.taste-skill/
+build/
+dist/
+*.spec
+*.egg-info/
+vendor/*.exe
+captures/
+*.log

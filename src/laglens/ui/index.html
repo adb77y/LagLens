@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="laglens-token" content="__WRITE_TOKEN__">
+  <title>LagLens — Capture the hitch</title>
+  <link rel="icon" href="/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/charts.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <aside class="rail" aria-label="Main navigation">
+    <a href="#capture" class="brand" aria-label="LagLens home"><img src="/mark.svg" alt="LagLens" width="32" height="32"></a>
+    <nav>
+      <a href="#capture" data-nav="capture" title="Capture" aria-label="Capture"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg><span>Capture</span></a>
+      <a href="#library" data-nav="library" title="Captures" aria-label="Captures"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h4"/></svg><span>Captures</span></a>
+      <a href="#compare" data-nav="compare" title="Compare" aria-label="Compare"><svg viewBox="0 0 24 24"><path d="M5 5v14M12 3v18M19 8v11M3 9h4M10 15h4M17 12h4"/></svg><span>Compare</span></a>
+      <a href="#guide" data-nav="guide" title="How it works" aria-label="How it works"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 11v6M12 7v1"/></svg><span>Guide</span></a>
+    </nav>
+    <span class="rail-end" title="Local only">L</span>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><a href="#capture" class="wordmark">LagLens <span>0.1</span></a><div class="local-state"><span class="dot"></span>Local workspace <span class="device-label">/ Windows</span></div></header>
+    <main id="main">
+      <section id="capture-view" class="view">
+        <div class="title-row"><div><h1>Capture the hitch.</h1><p>Mark the moment. Keep the evidence around it.</p></div><span class="shortcut">Mark stutter <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>F8</kbd></span></div>
+        <div class="capture-toolbar panel">
+          <div class="process-field"><label for="process">Game process</label><div class="joined"><select id="process"><option value="">Choose a running game…</option></select><button id="refresh-processes" title="Refresh running processes" aria-label="Refresh running processes">↻</button></div></div>
+          <div><label for="target">FPS target</label><select id="target"><option>30</option><option selected>60</option><option>90</option><option>120</option><option>144</option><option>165</option><option>240</option></select></div>
+          <div><label for="duration">Duration</label><select id="duration"><option value="30">30 sec</option><option value="60">1 min</option><option value="120" selected>2 min</option><option value="300">5 min</option><option value="600">10 min</option></select></div>
+          <button id="start" class="primary">Start recording</button>
+          <button id="stop" hidden>Stop &amp; save</button>
+        </div>
+        <div class="status-row"><label class="check-label"><input id="probe" type="checkbox"> Network probe <span title="Optional ICMP probes to 1.1.1.1. This does not measure your game server.">(1.1.1.1)</span></label><span id="capture-status" role="status">Ready. Your recordings stay on this PC.</span></div>
+        <div id="capture-error" class="notice error" role="alert" hidden></div>
+        <div id="capture-demo-notice" class="notice" hidden>Illustrative sample data — not a measurement of your PC. <button class="text-button" id="clear-preview">Back to live capture</button></div>
+        <div id="capture-stats" class="metrics"></div>
+        <div class="analysis-grid">
+          <section class="panel timeline-panel"><div class="panel-heading"><h2>Frame time</h2><span class="meta">Lower &amp; steadier is smoother</span></div><div id="capture-chart" class="chart"></div><div class="chart-foot"><span id="capture-chart-note">Presented frames · milliseconds</span><span class="meta">Peaks preserved in each time bin</span></div><div id="chart-empty" class="empty-inline">Start a recording, import a PresentMon CSV, or <button class="text-button sample-action">explore a sample capture</button>.</div></section>
+          <section class="panel incident-panel"><div class="panel-heading"><h2>Marked moments</h2><button id="mark" disabled>Mark stutter</button></div><p class="muted">Up to 30 seconds before your mark.<br> 5 more seconds to see the recovery.</p><div class="window-strip"><span>−30s</span><div><i></i></div><span>+5s</span></div><div id="markers"><p class="empty-message">No moments marked in this session.</p></div><div class="marker-help"><h3>Stay in your game.</h3><p>The shortcut works while LagLens is in the background. Mark once, then keep playing for 5 seconds. Your saved moment appears here when the frames arrive.</p></div></section>
+        </div>
+        <div class="analysis-grid lower-grid">
+          <section class="panel"><div class="panel-heading"><h2>Evidence</h2><span id="finding-count" class="meta">Waiting for frames</span></div><div id="capture-findings"><p class="empty-message">Findings appear when frame data is available. Missing sensors remain unavailable.</p></div></section>
+          <section class="panel"><div class="panel-heading"><h2>System context</h2><span class="meta">Latest sample</span></div><dl id="sensors" class="sensor-list"><div><dt>Busiest CPU core</dt><dd>—</dd></div><div><dt>System RAM used</dt><dd>—</dd></div><div><dt>Game memory</dt><dd>—</dd></div><div><dt>Network probe</dt><dd>Off</dd></div></dl><p class="meta sensor-note">System readings provide context, not game-thread attribution.</p></section>
+        </div>
+      </section>
+      <section id="library-view" class="view" hidden>
+        <div class="title-row"><div><h1>Your captures</h1><p>Keep a baseline. Change one thing. Capture again.</p></div><div class="actions"><button class="sample-action">Load examples</button><button id="import" class="primary">Import CSV</button></div></div>
+        <input type="file" id="csv-file" accept=".csv,text/csv" hidden>
+        <p class="meta">PresentMon CSV imports select the dominant process and swap chain. Sensor data is not inferred.</p>
+        <div class="panel library-panel"><div id="library-content"></div></div>
+      </section>
+      <section id="session-view" class="view" hidden>
+        <div class="title-row"><div><a href="#library" class="back-link">← Your captures</a><h1 id="session-title">Capture</h1><p id="session-subtitle"></p></div><div class="actions"><button id="export-svg">Save image (SVG)</button><button id="export-html" class="primary">Export report</button><button id="export-json" title="Full frame and sensor data">JSON</button></div></div>
+        <div id="session-notice" class="notice" hidden></div>
+        <div id="session-stats" class="metrics"></div>
+        <section class="panel"><div class="panel-heading"><h2>Frame time</h2><span id="session-threshold" class="meta"></span></div><div id="session-chart" class="chart"></div><div class="chart-foot"><span>Presented frames · milliseconds</span><span class="meta">Max per time bin</span></div></section>
+        <div class="analysis-grid lower-grid"><section class="panel"><div class="panel-heading"><h2>What the evidence says</h2></div><div id="session-findings"></div></section><section class="panel"><div class="panel-heading"><h2>Stutter events</h2><span id="session-event-count" class="meta"></span></div><div id="session-events"></div></section></div>
+      </section>
+      <section id="compare-view" class="view" hidden>
+        <div class="title-row"><div><h1>Did the change help?</h1><p>Compare matched scenes, routes, FPS targets and capture lengths.</p></div></div>
+        <div class="compare-controls panel"><div><label for="before">Baseline</label><select id="before"></select></div><span class="compare-arrow">→</span><div><label for="after">After one change</label><select id="after"></select></div><button class="primary" id="compare-button">Compare captures</button></div>
+        <div id="comparison-empty" class="empty-state panel"><h2>Two runs tell a better story.</h2><p>Save two captures of the same scene, or explore the illustrative example pair.</p><button class="sample-action">Load example pair</button></div>
+        <div id="comparison" hidden><div id="compare-warnings" class="notice"></div><section class="panel"><div id="comparison-table"></div><p class="meta">Changes are relative to the baseline. “—” means a percentage is undefined because the baseline is zero.</p></section><div class="analysis-grid lower-grid"><section class="panel"><div class="panel-heading"><h2>Baseline frame time</h2></div><div id="before-chart" class="chart"></div></section><section class="panel"><div class="panel-heading"><h2>After the change</h2></div><div id="after-chart" class="chart"></div></section></div><p id="comparison-statement" class="muted"></p></div>
+      </section>
+      <section id="guide-view" class="view guide-view" hidden>
+        <div class="title-row"><div><h1>Read the hitch.</h1><p>A reproducible test is more useful than a lucky FPS number.</p></div></div>
+        <div class="guide-grid"><section class="panel"><h2>A simple recording routine</h2><ol><li>Open your game and select its rendering process.</li><li>Choose your intended FPS target and record a repeatable scene.</li><li>Press <kbd>Ctrl+Alt+F8</kbd> when the hitch happens.</li><li>Wait 5 seconds. The marked moment is saved automatically.</li><li>Change one setting, repeat the route, then compare the two captures.</li></ol></section><section class="panel"><h2>What the numbers mean</h2><dl class="definitions"><dt>Average FPS</dt><dd>Frames divided by total frame time. A high average can hide brief hitches.</dd><dt>1% low FPS</dt><dd>1,000 divided by the average of the slowest 1% of frame times.</dd><dt>P99 frame time</dt><dd>99% of recorded frame times fall at or below this value.</dd><dt>Stutter event</dt><dd>Frames exceeding both 2× your target frame budget and 2.5× the run median. Nearby spikes merge into one event.</dd></dl></section><section class="panel"><h2>Evidence has limits</h2><p>LagLens measures presented frames through PresentMon. System CPU and RAM readings are sampled separately. GPU busy time is shown only when provided by the capture source.</p><p>Network probing is optional and targets 1.1.1.1, not the game server. Correlation is not proof of cause. Shader compilation, paging and temperatures are not directly measured in this version.</p></section><section class="panel"><h2>Your data stays local</h2><p>No account, analytics or background uploads. Captures are stored in your local LagLens folder.</p><p>Exports include the game name and performance data. Review them before sharing. Sample sessions are synthetic and always labelled.</p><p>Live capture uses Windows ETW. Some PCs require running LagLens as administrator. It does not change game files or inject into the game.</p></section></div>
+      </section>
+    </main>
+    <footer><span>Capture a stutter. Compare the fix.</span><span>Local only · PresentMon 2.6.0</span></footer>
+  </div>
+  <div id="toast" role="status" hidden></div>
+</body>
+</html>

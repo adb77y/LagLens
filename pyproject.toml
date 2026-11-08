@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "laglens"
+version = "0.1.0"
+description = "Capture a stutter. Understand the evidence. Compare the fix."
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+dependencies = ["psutil>=7.0,<8", "pywebview>=6.0,<7; sys_platform == 'win32'"]
+
+[project.scripts]
+laglens = "laglens.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+laglens = ["ui/*", "ui/fonts/*"]
